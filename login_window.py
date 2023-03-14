@@ -28,7 +28,7 @@ class LoginWindow(QMainWindow):
         self.cancel_button = QPushButton("Abbrechen")
         self.cancel_button.clicked.connect(self.close)
         self.create_button = QPushButton("Neuen Benutzer erstellen")
-        self.create_button.clicked.connect()
+       
 
         # Layout anpassen
         layout.addWidget(self.username_label)
