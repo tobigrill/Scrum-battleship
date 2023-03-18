@@ -1,1 +1,1 @@
-# Scrum-battleship - GUI, Drag & Drop Ship Placement etc. 
+# Scrum-battleship - GUI for Ship Placement 
