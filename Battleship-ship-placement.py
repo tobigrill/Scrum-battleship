@@ -1,3 +1,10 @@
+'''
+David Wuerfl
+19.03.2023
+Battleship-Ship-Placement
+'''
+
+
 import sys
 import random
 from PyQt6.QtCore import *
@@ -19,12 +26,14 @@ class MainWindow(QMainWindow):
         self.quit_action = QAction("Quit", self)
         self.quit_action.triggered.connect(QApplication.instance().quit)
         self.options_menu.addAction(self.quit_action)
+        
         self.ship_counts = {
             "2": 0,
             "3": 0,
             "4": 0,
             "5": 0
         }
+        
         self.size = 10
         self.sizeb = 10
         self.button_size = 50
@@ -101,9 +110,17 @@ class MainWindow(QMainWindow):
     
     def check_valid_placement(self, x, y, orientation):
         endpoints = self.find_possible_endpoints(x, y, orientation)
+        if not endpoints:
+            return False
         for endpoint in endpoints:
+            if endpoint[0] < 0 or endpoint[0] >= self.size or endpoint[1] < 0 or endpoint[1] >= self.size:
+                return False
             if self.button_fields[endpoint[0]][endpoint[1]].property("occupied"):
                 return False
+        x_values = [point[0] for point in endpoints]
+        y_values = [point[1] for point in endpoints]
+        if min(x_values) < 0 or max(x_values) >= self.size or min(y_values) < 0 or max(y_values) >= self.size:
+            return False
         return True
 
     def occupy_cells(self, x, y, orientation):
@@ -154,8 +171,7 @@ class MainWindow(QMainWindow):
                 for i in range(x, x + self.ship_size):
                     endpoints.append((i, y))
         return endpoints
-
-            
+        
 app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
