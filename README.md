@@ -1,1 +1,1 @@
-# Scrum-battleship - GUI for Ship Placement 
+# In-Game GUI, Game-Function
