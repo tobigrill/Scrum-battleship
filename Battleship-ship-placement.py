@@ -1,6 +1,6 @@
 '''
 David Wuerfl
-19.03.2023
+27.03.2023
 Battleship-Ship-Placement
 '''
 
@@ -27,6 +27,10 @@ class MainWindow(QMainWindow):
         self.quit_action.triggered.connect(QApplication.instance().quit)
         self.options_menu.addAction(self.quit_action)
         
+        self.reset_action = QAction("Reset", self)
+        self.reset_action.triggered.connect(self.reset_game)
+        self.options_menu.addAction(self.reset_action)
+        
         self.ship_counts = {
             "2": 0,
             "3": 0,
@@ -49,13 +53,16 @@ class MainWindow(QMainWindow):
         self.radioButton4 = QRadioButton("Carrier")
         self.radioButton4.toggled.connect(lambda checked, size=5: self.set_ship_size(size))
         self.vertical_checkbox = QCheckBox("Vertical")
+        self.buttonC = QPushButton("Confirm")
+        self.buttonC.setEnabled(False)
+        self.buttonC.clicked.connect(self.confirm_placement)
         
         self.options_layout.addWidget(self.vertical_checkbox)
         self.options_layout.addWidget(self.radioButton1)
         self.options_layout.addWidget(self.radioButton2)
         self.options_layout.addWidget(self.radioButton3)
         self.options_layout.addWidget(self.radioButton4)
-        
+        self.options_layout.addWidget(self.buttonC)
         self.options_frame = QFrame()
         self.options_frame.setLayout(self.options_layout)
         self.options_dock = QDockWidget("Ships", self)
@@ -107,7 +114,8 @@ class MainWindow(QMainWindow):
                 self.radioButton3.setEnabled(False)
             elif size == 5:
                 self.radioButton4.setEnabled(False)
-    
+        self.update_confirm_button()
+        
     def check_valid_placement(self, x, y, orientation):
         endpoints = self.find_possible_endpoints(x, y, orientation)
         if not endpoints:
@@ -159,7 +167,8 @@ class MainWindow(QMainWindow):
                 self.ship_counts[self.selected_ship] += 1
                 if all(count == 2 for count in self.ship_counts.values()):
                     QMessageBox.information(self, "All ships placed", "All ships have been placed!")
-
+        self.update_confirm_button()
+        
     def find_possible_endpoints(self, x, y, orientation):
         endpoints = []
         if orientation == "right":
@@ -171,6 +180,32 @@ class MainWindow(QMainWindow):
                 for i in range(x, x + self.ship_size):
                     endpoints.append((i, y))
         return endpoints
+    
+    def reset_game(self):
+        self.ship_counts = {"2": 0, "3": 0, "4": 0, "5": 0}
+        self.ships = []
+        for i in range(self.size):
+            for j in range(self.size):
+                button = self.button_fields[i][j]
+                button.setProperty("occupied", False)
+                button.setStyleSheet("background-color: #e6f3ff")
+                button.setText("")
+                button.setEnabled(True)
+        self.radioButton1.setEnabled(True)
+        self.radioButton2.setEnabled(True)
+        self.radioButton3.setEnabled(True)
+        self.radioButton4.setEnabled(True)
+    
+    def update_confirm_button(self):
+        if self.ship_counts["2"] == 2 and self.ship_counts["3"] == 2 \
+                and self.ship_counts["4"] == 2 and self.ship_counts["5"] == 2:
+            self.buttonC.setEnabled(True)
+        else:
+            self.buttonC.setEnabled(False)
+
+    def confirm_placement(self):
+        reply = QMessageBox.question(self, "Confirm Placement", 
+            "Are you ready to play?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
 app = QApplication(sys.argv)
 window = MainWindow()
