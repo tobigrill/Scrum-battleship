@@ -14,12 +14,12 @@ from PyQt6.QtWidgets import *
 
 class In_Game_UI(QWidget):
     
-    def __init__(self):
+    def __init__(self, ships):
         super().__init__()
         grid = QGridLayout()
         button_size = QSize(70, 70)
         button_margin = 0
-        
+        self.ships=ships
         
         for i in range(1, 11):
             label = QLabel(str(i))
@@ -35,9 +35,15 @@ class In_Game_UI(QWidget):
                 button = QPushButton()
                 button.setFixedSize(button_size)
                 button.setContentsMargins(button_margin, button_margin, button_margin, button_margin)
+                button.setEnabled(False)
                 button.setStyleSheet("QPushButton {background-color:#ccf2ff ; color: white; border: 0.5px solid black;}"
-                                   "QPushButton:hover {background-color:#cce6ff  ;}")
-                grid.addWidget(button, i, j+1)
+                                     "QPushButton:hover {background-color:#cce6ff  ;}")
+                grid.addWidget(button, i, j+14)
+                for ship in self.ships:
+                    for coord in ship[1]:
+                        if coord[0] == i-1 and coord[1] == j:
+                            button.setStyleSheet("background-color: blue;")
+                            button.setText(ship[0])
 
         for i in range(1, 11):
             for j in range(1):
@@ -50,10 +56,9 @@ class In_Game_UI(QWidget):
                 button = QPushButton()
                 button.setFixedSize(button_size)
                 button.setContentsMargins(button_margin, button_margin, button_margin, button_margin)
-                button.setEnabled(False)
                 button.setStyleSheet("QPushButton {background-color:#ccf2ff ; color: white; border: 0.5px solid black;}"
                                    "QPushButton:hover {background-color:#cce6ff  ;}")
-                grid.addWidget(button, i, j+14)
+                grid.addWidget(button, i, j+1)
 
         for i in range(1, 11):
             label = QLabel(str(i))
@@ -313,9 +318,9 @@ class MainWindow(QWidget):
 
     
     def In_Game(self):
-        print(self.button_fields)
+        print(self.ships)
         self.close()
-        self.window2=In_Game_UI()
+        self.window2=In_Game_UI(self.ships)
         self.window2.show()
     
         
@@ -323,5 +328,3 @@ app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
 sys.exit(app.exec())
-
-
