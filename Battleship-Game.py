@@ -1,7 +1,8 @@
 '''
 David Wuerfl
-25.04.2023
+28.04.2023
 Battleship-Ship-Placement
+Game-Function
 '''
 
 
@@ -16,7 +17,7 @@ class In_Game_UI(QWidget):
     
     def __init__(self, ships):
         super().__init__()
-        grid = QGridLayout()
+        self.grid = QGridLayout()
         button_size = QSize(70, 70)
         button_margin = 0
         self.ships=ships
@@ -24,33 +25,35 @@ class In_Game_UI(QWidget):
         for i in range(1, 11):
             label = QLabel(str(i))
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            grid.addWidget(label, i, 0, 1, 1)
+            self.grid.addWidget(label, i, 0, 1, 1)
         for j, letter in enumerate(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J" " ", " ", " ", " ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]):
             label = QLabel(letter)
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            grid.addWidget(label, 0, j+1, 1, 1)
-
+            self.grid.addWidget(label, 0, j+1, 1, 1)
+        #Spieler-Feld
         for i in range(1, 11):
             for j in range(10):
-                button = QPushButton()
-                button.setFixedSize(button_size)
-                button.setContentsMargins(button_margin, button_margin, button_margin, button_margin)
-                button.setEnabled(False)
-                button.setStyleSheet("QPushButton {background-color:#ccf2ff ; color: white; border: 0.5px solid black;}"
+                sbutton = QPushButton()
+                sbutton.setFixedSize(button_size)
+                sbutton.setContentsMargins(button_margin, button_margin, button_margin, button_margin)
+                sbutton.setEnabled(False)
+                sbutton.setStyleSheet("QPushButton {background-color:#ccf2ff ; color: white; border: 0.5px solid black;}"
                                      "QPushButton:hover {background-color:#cce6ff  ;}")
-                grid.addWidget(button, i, j+14)
+                self.grid.addWidget(sbutton, i, j+14)
                 for ship in self.ships:
                     for coord in ship[1]:
                         if coord[0] == i-1 and coord[1] == j:
-                            button.setStyleSheet("background-color: blue;")
-                            button.setText(ship[0])
+                            sbutton.setStyleSheet("QPushButton {background-color:#014eff ; color: white; border: 0.5px solid black;}"
+                                     "QPushButton:hover {background-color:#cce6ff  ;}")
+                            sbutton.setText(ship[0])
 
         for i in range(1, 11):
             for j in range(1):
                 spacer = QWidget()
                 spacer.setFixedSize(5, 5)
-                grid.addWidget(spacer, i, j)
-
+                self.grid.addWidget(spacer, i, j)
+       
+        #Gegner Feld
         for i in range(1, 11):
             for j in range(10):
                 button = QPushButton()
@@ -58,12 +61,14 @@ class In_Game_UI(QWidget):
                 button.setContentsMargins(button_margin, button_margin, button_margin, button_margin)
                 button.setStyleSheet("QPushButton {background-color:#ccf2ff ; color: white; border: 0.5px solid black;}"
                                    "QPushButton:hover {background-color:#cce6ff  ;}")
-                grid.addWidget(button, i, j+1)
-
+                self.grid.addWidget(button, i, j+1)
+                button.clicked.connect(self.onButtonClicked)
+                
+            
         for i in range(1, 11):
             label = QLabel(str(i))
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            grid.addWidget(label, i, 25, 1, 1)
+            self.grid.addWidget(label, i, 25, 1, 1)
         
         
         buttonQ = QPushButton("X")
@@ -71,27 +76,40 @@ class In_Game_UI(QWidget):
                                    "QPushButton:hover {background-color: #cc0000;}")
         buttonQ.setFixedSize(QSize(20, 20))
         buttonQ.clicked.connect(self.close)
-        grid.addWidget(buttonQ, 0,25)
+        self.grid.addWidget(buttonQ, 0,25)
+         
         
-        
+        self.grid.setColumnMinimumWidth(0, 50)
+        self.grid.setRowMinimumHeight(60, 100)
+        self.grid.setHorizontalSpacing(0)
+        self.grid.setVerticalSpacing(0)
         
         ships_label = QLabel("Ships Left")
         ships_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        grid.addWidget(ships_label, 13, 5, 1, 6)
+        self.grid.addWidget(ships_label, 13, 5, 1, 6)
         
-        
-        
-        grid.setColumnMinimumWidth(0, 50)
-        grid.setRowMinimumHeight(60, 100)
-        grid.setHorizontalSpacing(0)
-        grid.setVerticalSpacing(0)
-        
-        self.setLayout(grid)
+        self.setLayout(self.grid)
         self.setWindowTitle("In a Battle")
         self.showFullScreen()
         self.show()
-
         
+    def onButtonClicked(self):
+        sender = self.sender()
+        index = self.layout().indexOf(sender)
+        position = self.layout().getItemPosition(index)
+        row, col = position[:2]
+        for ship_id, coordinates in self.ships:
+            if (row-1, col-1) in coordinates:
+                sender.setEnabled(False)
+                sender.setStyleSheet("QPushButton {background-color:#ff0000 ; color: white; border: 0.5px solid black;}"
+                                   "QPushButton:hover {background-color:#5c2323  ;}")
+            
+                return
+            if sender.isEnabled():
+                sender.setEnabled(False)
+                sender.setStyleSheet("QPushButton {background-color:#66ccff ; color: white; border: 0.5px solid black;}"
+                                        "QPushButton:hover {background-color:#cce6ff  ;}")
+                
 class MainWindow(QWidget):
     
 
