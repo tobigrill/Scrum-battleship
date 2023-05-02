@@ -30,6 +30,7 @@ class In_Game_UI(QWidget):
             label = QLabel(letter)
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.grid.addWidget(label, 0, j+1, 1, 1)
+            
         #Spieler-Feld
         for i in range(1, 11):
             for j in range(10):
@@ -62,7 +63,7 @@ class In_Game_UI(QWidget):
                 button.setStyleSheet("QPushButton {background-color:#ccf2ff ; color: white; border: 0.5px solid black;}"
                                    "QPushButton:hover {background-color:#cce6ff  ;}")
                 self.grid.addWidget(button, i, j+1)
-                button.clicked.connect(self.onButtonClicked)
+                button.clicked.connect(lambda _, row=i, column=j: self.onButtonClicked(row, column))
                 
             
         for i in range(1, 11):
@@ -92,7 +93,7 @@ class In_Game_UI(QWidget):
         self.setWindowTitle("In a Battle")
         self.showFullScreen()
         self.show()
-        
+    '''  
     def onButtonClicked(self):
         sender = self.sender()
         index = self.layout().indexOf(sender)
@@ -109,7 +110,13 @@ class In_Game_UI(QWidget):
                 sender.setEnabled(False)
                 sender.setStyleSheet("QPushButton {background-color:#66ccff ; color: white; border: 0.5px solid black;}"
                                         "QPushButton:hover {background-color:#cce6ff  ;}")
-                
+     '''
+    def onButtonClicked(self, row, column):
+         button = self.sender()  
+         row, column, _, _ = self.grid.getItemPosition(self.grid.indexOf(button))
+         coordinates = (row-1, column-1)  
+         print(coordinates)
+    
 class MainWindow(QWidget):
     
 
@@ -276,17 +283,18 @@ class MainWindow(QWidget):
                     QMessageBox.information(self, "All ships placed", "All ships have been placed!")
         self.update_confirm_button()
         self.id = int(str(self.ship_num) + str(self.selected_ship))
-        print(self.id)
+        #print(self.id)
+        
+        
     def occupy_cells(self, x, y, orientation):
         endpoints = self.find_possible_endpoints(x, y, orientation)
         for endpoint in endpoints:
             button = self.button_fields[endpoint[0]][endpoint[1]]
             button.setProperty("occupied", True)
-            button.setStyleSheet("background-color: #66b3ff; border: 1px solid black")
+            button.setStyleSheet("QPushButton {background-color:#014eff ; color: white; border: 0.5px solid black;}"
+                                     "QPushButton:hover {background-color:#cce6ff  ;}")
             button.setText(str(self.ship_num) + str(self.selected_ship))
             button.setEnabled(False)
-
-
 
         
     def find_possible_endpoints(self, x, y, orientation):
