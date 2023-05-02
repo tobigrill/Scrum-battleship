@@ -85,7 +85,7 @@ class In_Game_UI(QWidget):
         self.grid.setHorizontalSpacing(0)
         self.grid.setVerticalSpacing(0)
         
-        ships_label = QLabel("Ships Left")
+        ships_label = QLabel("")
         ships_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.grid.addWidget(ships_label, 13, 5, 1, 6)
         
@@ -141,20 +141,29 @@ class MainWindow(QWidget):
         
         self.button_size = QSize(70, 70)
         button_margin = 0
+        
+        font = QFont()
+        font.setPointSize(20)
 
         self.grid_layout = QGridLayout()
-        self.radioButton1 = QRadioButton("Patrol Boat")
+        self.radioButton1 = QRadioButton("Patrol Boat [2x1]")
+        self.radioButton1.setFont(font)
         self.radioButton1.toggled.connect(lambda checked, size=2: self.set_ship_size(size))
-        self.radioButton2 = QRadioButton("Submarine")
+        self.radioButton2 = QRadioButton("Submarine [3x1]")
+        self.radioButton2.setFont(font)
         self.radioButton2.toggled.connect(lambda checked, size=3: self.set_ship_size(size))
-        self.radioButton3 = QRadioButton("Destroyer")
+        self.radioButton3 = QRadioButton("Destroyer [4x1]")
+        self.radioButton3.setFont(font)
         self.radioButton3.toggled.connect(lambda checked, size=4: self.set_ship_size(size))
-        self.radioButton4 = QRadioButton("Carrier")
+        self.radioButton4 = QRadioButton("Carrier [5x1]")
+        self.radioButton4.setFont(font)
         self.radioButton4.toggled.connect(lambda checked, size=5: self.set_ship_size(size))
-        self.vertical_checkbox = QCheckBox("Vertical")
+        self.vertical_checkbox = QCheckBox(" Place vertical")
+        self.vertical_checkbox.setFont(font)
         self.buttonC = QPushButton("Confirm")
+        self.buttonC.setFont(font)
         self.buttonC.setEnabled(False)
-        self.buttonC.setFixedSize(QSize(150, 20))
+        self.buttonC.setFixedSize(QSize(230, 32))
         self.buttonC.clicked.connect(self.confirm_placement)
         self.buttonQ = QPushButton("X")
         self.buttonQ.setStyleSheet("QPushButton {background-color: red; color: white; border: 2px solid black;}"
@@ -162,19 +171,20 @@ class MainWindow(QWidget):
         self.buttonQ.setFixedSize(QSize(20, 20))
         self.buttonQ.clicked.connect(self.close)
         self.buttonR = QPushButton("Reset")
-        self.buttonR.setFixedSize(QSize(150, 20))
+        self.buttonR.setFont(font)
+        self.buttonR.setFixedSize(QSize(230, 32))
         self.buttonR.setStyleSheet("QPushButton {background-color: #c0c0c0; color: black; border: 2px solid black;}"
                                    "QPushButton:hover {background-color:#999999 ;}")
         
         self.buttonR.clicked.connect(self.reset_game)
-        self.grid_layout.addWidget(self.buttonQ, 0,15)
-        self.grid_layout.addWidget(self.vertical_checkbox, 1,13)
-        self.grid_layout.addWidget(self.radioButton1, 2,13)
-        self.grid_layout.addWidget(self.radioButton2, 3,13)
-        self.grid_layout.addWidget(self.radioButton3, 4,13)
-        self.grid_layout.addWidget(self.radioButton4, 5,13)
-        self.grid_layout.addWidget(self.buttonC, 6,13)
-        self.grid_layout.addWidget(self.buttonR,0,13)
+        self.grid_layout.addWidget(self.buttonQ, 0,20)
+        self.grid_layout.addWidget(self.vertical_checkbox, 3,13)
+        self.grid_layout.addWidget(self.radioButton1, 4,13)
+        self.grid_layout.addWidget(self.radioButton2, 5,13)
+        self.grid_layout.addWidget(self.radioButton3, 6,13)
+        self.grid_layout.addWidget(self.radioButton4, 7,13)
+        self.grid_layout.addWidget(self.buttonC, 8,13)
+        self.grid_layout.addWidget(self.buttonR,2,13)
         self.ships = []
         
         self.grid_layout.setVerticalSpacing(0)
@@ -211,8 +221,11 @@ class MainWindow(QWidget):
             label = QLabel(letter)
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.grid_layout.addWidget(label, 0, j+1, 1, 1)
-        spacer = QSpacerItem(70, 40)
-        self.grid_layout.addItem(spacer, 10+1, 2, 2, 10) 
+        spacer = QSpacerItem(10, 1)
+        self.grid_layout.addItem(spacer, 10,10, 20, 10)
+        spacer1 = QLabel()
+        spacer1.setFixedSize(1, 50)
+        self.grid_layout.addWidget(spacer1, 0, 0, 1, self.grid_layout.columnCount())
         self.setLayout(self.grid_layout)
         
         
