@@ -30,13 +30,13 @@ class Ui_Dialog(object):
         self.error.setText("")
         self.error.setObjectName("error")
         self.find_match_button = QtWidgets.QPushButton(self.lobby_gui)
-        self.find_match_button.setGeometry(QtCore.QRect(370, 120, 431, 61))
+        self.find_match_button.setGeometry(QtCore.QRect(330, 80, 431, 61))
         self.find_match_button.setStyleSheet("border-radius:20px;\n"
 "background-color: rgb(170, 255, 255);\n"
 "font: 14pt \"MS Shell Dlg 2\";")
         self.find_match_button.setObjectName("find_match_button")
         self.players_list_widget = QtWidgets.QListWidget(self.lobby_gui)
-        self.players_list_widget.setGeometry(QtCore.QRect(210, 290, 731, 431))
+        self.players_list_widget.setGeometry(QtCore.QRect(130, 290, 731, 431))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -70,6 +70,12 @@ class Ui_Dialog(object):
         self.players_list_widget.setTextElideMode(QtCore.Qt.TextElideMode.ElideRight)
         self.players_list_widget.setFlow(QtWidgets.QListView.Flow.TopToBottom)
         self.players_list_widget.setObjectName("players_list_widget")
+        self.disbutton = QtWidgets.QPushButton(self.lobby_gui)
+        self.disbutton.setGeometry(QtCore.QRect(880, 680, 261, 61))
+        self.disbutton.setStyleSheet("border-radius:20px;\n"
+"background-color: rgb(170, 255, 255);\n"
+"font: 14pt \"MS Shell Dlg 2\";")
+        self.disbutton.setObjectName("disbutton")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -79,3 +85,4 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.players_label.setText(_translate("Dialog", "Online Spieler:"))
         self.find_match_button.setText(_translate("Dialog", "Spiel suchen"))
+        self.disbutton.setText(_translate("Dialog", "Disconnect"))
