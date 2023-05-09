@@ -1,7 +1,7 @@
 import hashlib
 import sys
 
-from PyQt6.QtWidgets import QDialog, QGridLayout, QLineEdit, QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QApplication
+from PyQt6.QtWidgets import QListWidgetItem, QDialog, QGridLayout, QLineEdit, QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QApplication
 from PyQt6.QtCore import Qt
 from PyQt6.uic import loadUi
 import sys
@@ -119,7 +119,9 @@ class LoginWindow(QDialog):
         # Überprüfe, ob die Anmeldedaten korrekt sind
         if self.authenticate(username, password):
             print("Erfolgreich eingeloggt!")
-            self.close()
+            self.lobby_gui = MatchmakingWindow()
+            self.lobby_gui.show()
+           
         else:
             print("Falscher Benutzername oder Passwort.")
     
@@ -135,9 +137,6 @@ class LoginWindow(QDialog):
         self.create_button.clicked.connect(self.create_user)
         self.cancel_button.clicked.connect(self.close)
         create_user.show()
-
-  
-        
 
     def create_user(self):
         username = self.username_input.text()
@@ -163,12 +162,38 @@ class LoginWindow(QDialog):
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         self.users[username] = hashed_password
 
+
         # Öffne das Login-Fenster
         self.login_window = LoginWindow()
         if not self.login_window:
             self.login_window = LoginWindow()
         self.login_window.show()
         self.close()
+class MatchmakingWindow(QDialog):
+    def __init__(self):
+        super().__init__()
+        loadUi("lobby_guii.ui",self)
+      
+
+
+        
+
+        # Button-Click-Event hinzufügen
+        self.find_match_button.clicked.connect(self.find_match)
+
+        # Spieler hinzufügen
+        self.add_player("tobi")                                                        
+        self.add_player("David")
+        self.add_player("Nick")
+
+    def add_player(self, player_name):
+        item = QListWidgetItem(player_name)
+        item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.players_list_widget.addItem(item)
+
+    def find_match(self):
+        # TODO: Implementierung des Matchmaking-Algorithmus
+        print("Spieler wird angefragt...")
 
 
         
